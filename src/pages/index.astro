@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, experience, projects, skills, education, certifications } from '../data/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<Base>
+  <header>
+    <h1>{person.name}</h1>
+    <p class="tagline">{person.title} · {person.location}</p>
+    <p>{person.summary}</p>
+    <ul class="links">
+      <li><a href={person.github}>GitHub</a></li>
+      <li><a href={person.linkedin}>LinkedIn</a></li>
+      {person.resume && <li><a href={`${base}/${person.resume}`}>Resume (PDF)</a></li>}
+    </ul>
+  </header>
+
+  <section aria-labelledby="projects">
+    <h2 id="projects">Projects</h2>
+    {projects.map((p) => (
+      <article>
+        <h3>{p.url ? <a href={p.url}>{p.name}</a> : p.name}</h3>
+        <p>{p.blurb}</p>
+        {p.points.length > 0 && (
+          <ul>{p.points.map((pt) => <li>{pt}</li>)}</ul>
+        )}
+        <ul class="tags" aria-label="Technologies">
+          {p.stack.map((s) => <li>{s}</li>)}
+        </ul>
+      </article>
+    ))}
+  </section>
+
+  <section aria-labelledby="experience">
+    <h2 id="experience">Experience</h2>
+    {experience.map((e) => (
+      <article>
+        <h3>{e.role}</h3>
+        <p class="meta">{e.org} · {e.dates}</p>
+        {e.earlierRole && <p class="meta">Previously: {e.earlierRole}</p>}
+        {e.points.length > 0 && <ul>{e.points.map((pt) => <li>{pt}</li>)}</ul>}
+      </article>
+    ))}
+  </section>
+
+  <section aria-labelledby="education">
+    <h2 id="education">Education and certifications</h2>
+    <p><strong>{education.school}</strong><br />{education.degree} · {education.note}</p>
+    <ul>{certifications.map((c) => <li>{c}</li>)}</ul>
+  </section>
+
+  <section aria-labelledby="skills">
+    <h2 id="skills">Skills</h2>
+    <dl>
+      {skills.map((s) => (
+        <>
+          <dt>{s.group}</dt>
+          <dd>{s.items.join(', ')}</dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <footer>
+    <p>© {new Date().getFullYear()} {person.name}</p>
+  </footer>
+</Base>
