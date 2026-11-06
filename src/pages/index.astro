@@ -1,68 +1,51 @@
 ---
 import Base from '../layouts/Base.astro';
-import { person, experience, projects, skills, education, certifications } from '../data/site';
+import { person, intro, highlights, projects } from '../data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <Base>
-  <header>
-    <h1>{person.name}</h1>
-    <p class="tagline">{person.title} · {person.location}</p>
-    <p>{person.summary}</p>
-    <ul class="links">
-      <li><a href={person.github}>GitHub</a></li>
-      <li><a href={person.linkedin}>LinkedIn</a></li>
-      {person.resume && <li><a href={`${base}/${person.resume}`}>Resume (PDF)</a></li>}
-    </ul>
-  </header>
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">{person.title} · {person.location}</p>
+      <h1>{intro.greeting}</h1>
+      <p class="name"><span class="grad">{person.name}</span></p>
+      {intro.paragraphs.map((t) => <p class="summary">{t}</p>)}
+      <div class="actions">
+        <a class="btn primary" href={`${base}/projects/`}>See my projects</a>
+        {person.resume && <a class="btn" href={`${base}/${person.resume}`}>Resume (PDF)</a>}
+        <a class="btn" href={person.github}>GitHub</a>
+        <a class="btn" href={person.linkedin}>LinkedIn</a>
+      </div>
+    </div>
+    <div class="avatar">
+      {person.photo ? (
+        <img src={`${base}/${person.photo}`} alt={person.photoAlt} width="320" height="320" fetchpriority="high" />
+      ) : (
+        <span class="initials" aria-hidden="true">{person.initials}</span>
+      )}
+    </div>
+  </section>
 
-  <section aria-labelledby="projects">
-    <h2 id="projects">Projects</h2>
-    {projects.map((p) => (
-      <article>
-        <h3>{p.url ? <a href={p.url}>{p.name}</a> : p.name}</h3>
-        <p>{p.blurb}</p>
-        {p.points.length > 0 && (
-          <ul>{p.points.map((pt) => <li>{pt}</li>)}</ul>
-        )}
-        <ul class="tags" aria-label="Technologies">
-          {p.stack.map((s) => <li>{s}</li>)}
-        </ul>
-      </article>
+  <ul class="stats" aria-label="Highlights">
+    {highlights.map((h) => (
+      <li><strong>{h.value}</strong><span>{h.label}</span></li>
     ))}
-  </section>
+  </ul>
 
-  <section aria-labelledby="experience">
-    <h2 id="experience">Experience</h2>
-    {experience.map((e) => (
-      <article>
-        <h3>{e.role}</h3>
-        <p class="meta">{e.org} · {e.dates}</p>
-        {e.earlierRole && <p class="meta">Previously: {e.earlierRole}</p>}
-        {e.points.length > 0 && <ul>{e.points.map((pt) => <li>{pt}</li>)}</ul>}
-      </article>
-    ))}
-  </section>
-
-  <section aria-labelledby="education">
-    <h2 id="education">Education and certifications</h2>
-    <p><strong>{education.school}</strong><br />{education.degree} · {education.note}</p>
-    <ul>{certifications.map((c) => <li>{c}</li>)}</ul>
-  </section>
-
-  <section aria-labelledby="skills">
-    <h2 id="skills">Skills</h2>
-    <dl>
-      {skills.map((s) => (
-        <>
-          <dt>{s.group}</dt>
-          <dd>{s.items.join(', ')}</dd>
-        </>
+  <section class="section" aria-labelledby="featured">
+    <h2 id="featured">Featured projects</h2>
+    <div class="cards">
+      {projects.map((p) => (
+        <article class="card">
+          <h3>{p.name}</h3>
+          <p class="blurb">{p.blurb}</p>
+          <ul class="stack" aria-label="Technologies">
+            {p.stack.slice(0, 5).map((s) => <li>{s}</li>)}
+          </ul>
+        </article>
       ))}
-    </dl>
+    </div>
+    <p class="more"><a href={`${base}/projects/`}>All project details →</a></p>
   </section>
-
-  <footer>
-    <p>© {new Date().getFullYear()} {person.name}</p>
-  </footer>
 </Base>

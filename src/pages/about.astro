@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import SkillTiles from '../components/SkillTiles.astro';
+import Contributions from '../components/Contributions.astro';
+import { person, education, certifications } from '../data/site';
+---
+<Base title="About" description="Skills, education and certifications of Ryan Peart, data engineer: SQL, Python, Azure, Databricks, Snowflake.">
+  <div class="page-head">
+    <p class="eyebrow">About</p>
+    <h1>Skills and credentials</h1>
+    <p>{person.summary}</p>
+  </div>
+
+  <section class="section" aria-labelledby="skills">
+    <h2 id="skills">Skills</h2>
+    <SkillTiles grouped />
+  </section>
+
+  <section class="section" aria-labelledby="education">
+    <h2 id="education">Education</h2>
+    <div class="card">
+      <h3>{education.school}</h3>
+      <p class="blurb">{education.degree} · {education.note}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="certs">
+    <h2 id="certs">Certifications</h2>
+    <div class="card">
+      <ul class="checks">{certifications.map((c) => <li>{c}</li>)}</ul>
+    </div>
+  </section>
+
+  <Contributions />
+</Base>

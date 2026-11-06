@@ -1,0 +1,48 @@
+---
+// Logo cards for tools. Icons are inlined as SVG at build time, so no JS or external requests.
+import logos from '@iconify-json/logos/icons.json';
+import { skills, practices, type Skill } from '../data/site';
+
+interface Props {
+  grouped?: boolean;
+}
+const { grouped = false } = Astro.props;
+
+function icon(name?: string) {
+  const i = name ? (logos.icons as Record<string, { body: string; width?: number; height?: number }>)[name] : undefined;
+  if (!i) return null;
+  return { body: i.body, w: i.width ?? logos.width, h: i.height ?? logos.height };
+}
+
+const groups = grouped ? skills : [{ group: 'Tools', items: skills.flatMap((g) => g.items) }];
+---
+{groups.map((g) => (
+  <div class="tile-group">
+    {grouped && <h3>{g.group}</h3>}
+    <ul class="tiles" aria-label={g.group}>
+      {g.items.map((s: Skill) => {
+        const ic = icon(s.icon);
+        return (
+          <li class="tile">
+            <span class="plate" aria-hidden="true">
+              {ic ? (
+                <svg viewBox={`0 0 ${ic.w} ${ic.h}`} width="34" height="34" set:html={ic.body} />
+              ) : (
+                <span class="badge">{s.badge ?? s.name.slice(0, 2)}</span>
+              )}
+            </span>
+            <span class="tile-name">{s.name}</span>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+))}
+{grouped && (
+  <div class="tile-group">
+    <h3>Practices</h3>
+    <ul class="stack" aria-label="Practices">
+      {practices.map((p) => <li>{p}</li>)}
+    </ul>
+  </div>
+)}

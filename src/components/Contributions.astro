@@ -1,0 +1,82 @@
+---
+// GitHub-style contribution heatmap, drawn as inline SVG from src/data/contributions.json
+// (refreshed by scripts/fetch-contributions.mjs at build time). No JS, no external requests.
+import { person } from '../data/site';
+
+const files = import.meta.glob('../data/contributions.json', { eager: true }) as Record<
+  string,
+  { default: { updated: string; total: number; weeks: { date: string; count: number; level: number }[][] } }
+>;
+const data = Object.values(files)[0]?.default;
+
+const cell = 11;
+const gap = 3;
+const step = cell + gap;
+const left = 30;
+const top = 18;
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+let cols: { x: number; days: { y: number; date: string; count: number; level: number }[] }[] = [];
+let labels: { x: number; text: string }[] = [];
+let width = 0;
+let height = 0;
+if (data) {
+  let lastMonth = -1;
+  cols = data.weeks.map((w, i) => {
+    const m = new Date(w[0].date + 'T00:00:00Z').getUTCMonth();
+    // Label a month at the first full column where it starts, skipping a crowded first column.
+    if (m !== lastMonth) {
+      if (i > 0 || w.length === 7) labels.push({ x: left + i * step, text: months[m] });
+      lastMonth = m;
+    }
+    return {
+      x: left + i * step,
+      days: w.map((d) => ({ ...d, y: top + new Date(d.date + 'T00:00:00Z').getUTCDay() * step })),
+    };
+  });
+  // Drop a label that would overlap the next one.
+  labels = labels.filter((l, i) => i === labels.length - 1 || labels[i + 1].x - l.x >= 3 * step);
+  width = left + data.weeks.length * step;
+  height = top + 7 * step;
+}
+const profile = `${person.github}`;
+---
+<section class="section contrib" aria-labelledby="contrib-title">
+  <h2 id="contrib-title">GitHub activity</h2>
+  {data ? (
+    <>
+      <p class="blurb">
+        {data.total.toLocaleString('en-US')} contributions in the last year ·
+        <a href={profile}> @{person.github.split('/').pop()} on GitHub</a>
+      </p>
+      <div class="card contrib-card">
+        <div class="contrib-scroll">
+          <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img"
+            aria-label={`Contribution calendar: ${data.total} contributions in the last year`}>
+            {labels.map((l) => <text x={l.x} y="10" class="axis">{l.text}</text>)}
+            <text x="0" y={top + 1 * step + 9} class="axis">Mon</text>
+            <text x="0" y={top + 3 * step + 9} class="axis">Wed</text>
+            <text x="0" y={top + 5 * step + 9} class="axis">Fri</text>
+            {cols.map((c) => c.days.map((d) => (
+              <rect x={c.x} y={d.y} width={cell} height={cell} rx="2" class={`l${d.level}`}>
+                <title>{`${d.count} contribution${d.count === 1 ? '' : 's'} on ${d.date}`}</title>
+              </rect>
+            )))}
+          </svg>
+        </div>
+        <div class="contrib-foot">
+          <span>Updated {data.updated}</span>
+          <span class="legend" aria-hidden="true">
+            Less
+            <svg width={5 * step} height={cell}>
+              {[0, 1, 2, 3, 4].map((l) => <rect x={l * step} y="0" width={cell} height={cell} rx="2" class={`l${l}`} />)}
+            </svg>
+            More
+          </span>
+        </div>
+      </div>
+    </>
+  ) : (
+    <p class="blurb"><a href={profile}>See my contribution activity on GitHub</a></p>
+  )}
+</section>

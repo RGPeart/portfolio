@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { person } from '../data/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pdf = person.resume ? `${base}/${person.resume}` : null;
+---
+<Base title="Resume" description="Resume of Ryan Peart, data engineer, as a PDF to view or download.">
+  <div class="page-head">
+    <p class="eyebrow">Resume</p>
+    <h1>Resume</h1>
+    <p>The same details as the Experience and About pages, in one printable document.</p>
+    {pdf && (
+      <div class="actions">
+        <a class="btn primary" href={pdf}>Download PDF</a>
+      </div>
+    )}
+  </div>
+  {pdf && (
+    <object class="pdf-frame" data={pdf} type="application/pdf" aria-label="Ryan Peart resume">
+      <p class="pdf-fallback">Your browser can't show the PDF here. <a href={pdf}>Open the resume PDF</a>.</p>
+    </object>
+  )}
+</Base>

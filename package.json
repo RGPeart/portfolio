@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "contributions": "node scripts/fetch-contributions.mjs"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
   "type": "module",
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
+    "@iconify-json/logos": "1.2.19",
     "astro": "7.4.7"
   },
   "private": "true"

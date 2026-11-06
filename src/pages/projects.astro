@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { projects } from '../data/site';
+---
+<Base title="Projects" description="Personal data engineering projects by Ryan Peart: a Spotify data pipeline with recommendations, and a Magic Formula stock screener.">
+  <div class="page-head">
+    <p class="eyebrow">Projects</p>
+    <h1>Things I've built</h1>
+    <p>Personal projects where I get to pick the tools. More are on the way.</p>
+  </div>
+  <div class="cards">
+    {projects.map((p) => (
+      <article class="card">
+        <h2>{p.name}</h2>
+        <p class="blurb">{p.blurb}</p>
+        {p.points.length > 0 && (
+          <ul class="points">{p.points.map((pt) => <li>{pt}</li>)}</ul>
+        )}
+        <ul class="stack" aria-label="Technologies">
+          {p.stack.map((s) => <li>{s}</li>)}
+        </ul>
+        {p.url ? (
+          <a class="btn primary" href={p.url}>View on GitHub</a>
+        ) : (
+          <span class="status">Repository coming soon</span>
+        )}
+      </article>
+    ))}
+  </div>
+</Base>

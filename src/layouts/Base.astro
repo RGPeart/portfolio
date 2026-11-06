@@ -1,29 +1,45 @@
 ---
+import '../styles/global.css';
 import { person, description } from '../data/site';
 
-const title = `${person.name} | ${person.title}`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+interface Props {
+  title?: string;
+  description?: string;
+}
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pageTitle = Astro.props.title ? `${Astro.props.title} | ${person.name}` : `${person.name} | ${person.title}`;
+const pageDescription = Astro.props.description ?? description;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 const sitemapUrl = new URL(`${base}/sitemap-index.xml`, Astro.site);
+
+const nav = [
+  { label: 'Home', path: '/' },
+  { label: 'Projects', path: '/projects/' },
+  { label: 'Experience', path: '/experience/' },
+  { label: 'About', path: '/about/' },
+  { label: 'Resume', path: '/resume/' },
+];
+const here = Astro.url.pathname.replace(base, '') || '/';
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href={sitemapUrl} />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
 
     <script
       type="application/ld+json"
@@ -32,50 +48,37 @@ const sitemapUrl = new URL(`${base}/sitemap-index.xml`, Astro.site);
         '@type': 'Person',
         name: person.name,
         jobTitle: person.title,
-        url: canonical.href,
+        url: new URL(`${base}/`, Astro.site).href,
         sameAs: [person.github, person.linkedin],
       })}
     />
-    <style is:global>
-      :root {
-        --bg: #fff;
-        --fg: #1b1f24;
-        --muted: #57606a;
-        --line: #d8dee4;
-        --accent: #0b5cad;
-        color-scheme: light dark;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9aa4af; --line: #30363d; --accent: #58a6ff; }
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font: 17px/1.6 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      }
-      main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
-      h1 { font-size: 2.2rem; line-height: 1.2; margin: 0 0 .25rem; }
-      h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; padding-bottom: .35rem; border-bottom: 1px solid var(--line); }
-      h3 { font-size: 1.05rem; margin: 1.5rem 0 .25rem; }
-      a { color: var(--accent); }
-      .tagline { color: var(--muted); margin: 0 0 1rem; }
-      .meta { color: var(--muted); margin: 0 0 .5rem; font-size: .95rem; }
-      ul { padding-left: 1.2rem; margin: .4rem 0; }
-      li { margin: .25rem 0; }
-      .links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; padding: 0; list-style: none; margin: 1rem 0 0; }
-      .tags { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; list-style: none; margin: .6rem 0 0; }
-      .tags li { border: 1px solid var(--line); border-radius: 999px; padding: .05rem .7rem; font-size: .85rem; color: var(--muted); margin: 0; }
-      dl { margin: 0; }
-      dt { font-weight: 600; margin-top: .6rem; }
-      dd { margin: 0; color: var(--muted); }
-      footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
-    </style>
   </head>
   <body>
-    <main>
+    <a class="skip" href="#content">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Main">
+        <a class="brand" href={`${base}/`}>Ryan <span>Peart</span></a>
+        <ul>
+          {nav.map((n) => (
+            <li>
+              <a class="link" href={`${base}${n.path}`} aria-current={here === n.path ? 'page' : undefined}>{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main id="content">
       <slot />
     </main>
+    <footer class="site-footer">
+      <div>
+        <span>© {new Date().getFullYear()} {person.name}</span>
+        <ul>
+          <li><a href={person.github}>GitHub</a></li>
+          <li><a href={person.linkedin}>LinkedIn</a></li>
+          {person.resume && <li><a href={`${base}/${person.resume}`}>Resume (PDF)</a></li>}
+        </ul>
+      </div>
+    </footer>
   </body>
 </html>

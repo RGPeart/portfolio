@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+  schedule:
+    # Daily rebuild so the GitHub activity graph stays current.
+    - cron: '17 6 * * *'
 
 permissions:
   contents: read
@@ -19,6 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Refresh GitHub contributions
+        run: node scripts/fetch-contributions.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: withastro/action@v3
         with:
           node-version: 24
