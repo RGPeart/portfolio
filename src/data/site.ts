@@ -82,8 +82,7 @@ export const projects = [
   },
   {
     name: 'Magic Formula stock screener',
-    // Link to be added once the repository is public.
-    url: null as string | null,
+    url: 'https://github.com/RGPeart/magic-formula-screener' as string | null,
     blurb:
       'Python tool that recommends undervalued stocks using the Magic Formula from Joel Greenblatt’s "The Little Book That Beats The Market".',
     points: [],
