@@ -88,6 +88,19 @@ export const projects = [
     points: [],
     stack: ['Python'],
   },
+  {
+    name: 'Wearable Analyzer',
+    url: 'https://github.com/RGPeart/wearable-analyzer' as string | null,
+    blurb:
+      'Local Python CLI that turns my Apple Health, Fitbod and GPX exports into workout, recovery, training-load and lifting-volume summaries.',
+    points: [
+      'Source adapters share one load interface and a neutral data model, so a new device needs no changes to the analytics.',
+      'Merges Fitbod lifting sessions with the Apple Watch workouts they match on start time, and drops duplicate cardio entries.',
+      'Streams a 4.9 GB Apple Health export in about two minutes using 170 MB of memory.',
+      'A synthetic-data generator doubles as the test oracle: 64 pytest tests, with CI on Python 3.11 and 3.13.',
+    ],
+    stack: ['Python', 'Apple Health', 'Fitbod', 'GPX', 'pytest', 'GitHub Actions'],
+  },
 ];
 
 // `icon` is a name from @iconify-json/logos; tools without a logo there get a text badge (`badge`).
