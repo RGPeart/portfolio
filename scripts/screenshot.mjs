@@ -1,5 +1,5 @@
 // Usage: node scripts/screenshot.mjs <url> <outDir> [label]
-// Captures full-page screenshots at mobile/tablet/desktop widths and reports
+// Captures full-page screenshots at small phone/mobile/tablet/desktop widths and reports
 // console errors, failed requests, HTTP 4xx/5xx responses and horizontal
 // overflow per viewport.
 // The site is built with base '/portfolio' and trailing slashes, so preview
@@ -15,6 +15,7 @@ if (!url) {
 mkdirSync(outDir, { recursive: true });
 
 const viewports = [
+  { name: 'small', width: 360, height: 780 },
   { name: 'mobile', width: 390, height: 844 },
   { name: 'tablet', width: 820, height: 1180 },
   { name: 'desktop', width: 1440, height: 900 },
@@ -40,6 +41,15 @@ for (const vp of viewports) {
   page.on('response', (r) => r.status() >= 400 && errors.push(`HTTP ${r.status()}: ${r.url()}`));
   const res = await page.goto(url, { waitUntil: 'networkidle' });
   if (res && !res.ok()) errors.push(`page itself returned HTTP ${res.status()}; check the URL includes the base path (/portfolio/) and trailing slash`);
+  // Sections fade in as they scroll into view, and a full-page capture doesn't scroll,
+  // so walk down the page first, then return to the top and let the animations finish.
+  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < height; y += Math.round(vp.height / 2)) {
+    await page.evaluate((top) => window.scrollTo(0, top), y);
+    await page.waitForTimeout(50);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(1000);
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
