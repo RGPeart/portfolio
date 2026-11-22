@@ -3,13 +3,15 @@ import Base from '../layouts/Base.astro';
 import { person, intro, highlights, projects } from '../data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Split a trailing emoji off the greeting so it can wave once; the text itself is unchanged.
+const [, greetingText, greetingEmoji] = intro.greeting.match(/^(.*?)(\p{Extended_Pictographic}\u{FE0F}?)?$/u) ?? [, intro.greeting];
 ---
 <Base>
   <section class="hero">
     <div class="hero-text">
       <p class="eyebrow">{person.title} · {person.location}</p>
-      <h1>{intro.greeting}</h1>
-      <p class="name"><span class="grad">{person.name}</span></p>
+      <h1>{greetingText}{greetingEmoji && <span class="wave">{greetingEmoji}</span>}</h1>
+      <p class="name">{person.name}</p>
       {intro.paragraphs.map((t) => <p class="summary">{t}</p>)}
       <div class="actions">
         <a class="btn primary" href={`${base}/projects/`}>See my projects</a>
@@ -46,6 +48,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </article>
       ))}
     </div>
-    <p class="more"><a href={`${base}/projects/`}>All project details →</a></p>
+    <p class="more"><a href={`${base}/projects/`}>All project details <span class="arrow">→</span></a></p>
   </section>
 </Base>
