@@ -9,7 +9,7 @@ import { experience } from '../data/site';
   </div>
   <ol class="timeline">
     {experience.map((e) => (
-      <li>
+      <li class="reveal">
         <h2>{e.role}</h2>
         <p class="meta">{e.org} · {e.dates}</p>
         {e.earlierRole && <p><span class="prev">Previously: {e.earlierRole}</span></p>}

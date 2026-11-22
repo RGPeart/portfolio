@@ -17,7 +17,7 @@ function icon(name?: string) {
 const groups = grouped ? skills : [{ group: 'Tools', items: skills.flatMap((g) => g.items) }];
 ---
 {groups.map((g) => (
-  <div class="tile-group">
+  <div class="tile-group reveal">
     {grouped && <h3>{g.group}</h3>}
     <ul class="tiles" aria-label={g.group}>
       {g.items.map((s: Skill) => {
@@ -39,7 +39,7 @@ const groups = grouped ? skills : [{ group: 'Tools', items: skills.flatMap((g) =
   </div>
 ))}
 {grouped && (
-  <div class="tile-group">
+  <div class="tile-group reveal">
     <h3>Practices</h3>
     <ul class="stack" aria-label="Practices">
       {practices.map((p) => <li>{p}</li>)}

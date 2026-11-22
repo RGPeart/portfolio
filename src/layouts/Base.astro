@@ -32,6 +32,8 @@ const here = Astro.url.pathname.replace(base, '') || '/';
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href={sitemapUrl} />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <!-- Opt in to scroll reveals only when the observer exists; otherwise content stays visible. -->
+    <script is:inline>if ('IntersectionObserver' in window) document.documentElement.classList.add('js');</script>
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
@@ -80,5 +82,24 @@ const here = Astro.url.pathname.replace(base, '') || '/';
         </ul>
       </div>
     </footer>
+    <script is:inline>
+      // Reveal .reveal elements once as they scroll into view. Anything on screen at load is
+      // shown at once without animating (so it never delays the first paint of content), and
+      // anything above the viewport (e.g. a restored scroll position) is revealed straight away.
+      if (document.documentElement.classList.contains('js')) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting || e.boundingClientRect.top < 0) {
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+          }
+        });
+        document.querySelectorAll('.reveal').forEach((el) => {
+          if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in', 'shown');
+          else io.observe(el);
+        });
+      }
+    </script>
   </body>
 </html>

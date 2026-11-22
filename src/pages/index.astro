@@ -30,16 +30,16 @@ const [, greetingText, greetingEmoji] = intro.greeting.match(/^(.*?)(\p{Extended
   </section>
 
   <ul class="stats" aria-label="Highlights">
-    {highlights.map((h) => (
-      <li><strong>{h.value}</strong><span>{h.label}</span></li>
+    {highlights.map((h, i) => (
+      <li class="reveal" style={`--i: ${i}`}><strong>{h.value}</strong><span>{h.label}</span></li>
     ))}
   </ul>
 
   <section class="section" aria-labelledby="featured">
-    <h2 id="featured">Featured projects</h2>
+    <h2 id="featured" class="reveal">Featured projects</h2>
     <div class="cards">
-      {projects.map((p) => (
-        <article class="card">
+      {projects.map((p, i) => (
+        <article class="card reveal" style={`--i: ${i}`}>
           <h3>{p.name}</h3>
           <p class="blurb">{p.blurb}</p>
           <ul class="stack" aria-label="Technologies">

@@ -205,6 +205,33 @@ li { margin: .3rem 0; }
 .site-footer ul { list-style: none; display: flex; gap: 1.1rem; margin: 0; padding: 0; }
 .site-footer li { margin: 0; }
 
+/* motion: transform and opacity only, and none at all for prefers-reduced-motion.
+   Entrance animations are pure CSS. Scroll reveals only hide content once the inline
+   script in Base.astro has added .js to <html>, so without JS everything is visible. */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes pop { from { transform: scale(.94); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes draw { from { transform: scaleX(0); } }
+@keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 12% { transform: rotate(16deg); } 24% { transform: rotate(-8deg); } 36% { transform: rotate(14deg); } 48% { transform: rotate(-4deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  /* Headings and paragraphs never fade in: Chrome only counts text as painted (Largest
+     Contentful Paint) once an opacity animation on it has finished. Only small accents,
+     decoration and the buttons animate on load; the photo scales without fading. */
+  .hero-text > .eyebrow, .page-head > .eyebrow { animation: rise .6s var(--ease-out) backwards; }
+  .hero .name { animation: rise .6s var(--ease-out) .12s backwards; }
+  .hero .name::before { transform-origin: left; animation: draw .8s var(--ease-out) .3s backwards; }
+  .hero .actions, .page-head > .actions { animation: rise .7s var(--ease-out) .2s backwards; }
+  .avatar { animation: pop .8s var(--ease-out) backwards; }
+  .avatar::before, .hero::before { animation: fade 1.2s var(--ease-out) .25s backwards; }
+  .wave { animation: wave 1.6s ease-in-out .7s 1; }
+
+  /* scroll reveals: the script marks anything already on screen at load as shown straight away */
+  .js .reveal:not(.is-in) { opacity: 0; }
+  .js .reveal.is-in:not(.shown) { animation: rise .65s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
+  .js .section > h2.reveal.is-in:not(.shown)::after { animation: draw .9s var(--ease-out) .15s backwards; }
+}
+@media print { .js .reveal:not(.is-in) { opacity: 1; } }
+
 /* touch sizing: 44px tap targets on phones and tablets */
 @media (max-width: 52rem) {
   .brand { display: inline-block; padding: .5rem 0; }

@@ -9,8 +9,8 @@ import { projects } from '../data/site';
     <p>Personal projects where I get to pick the tools. More are on the way.</p>
   </div>
   <div class="cards">
-    {projects.map((p) => (
-      <article class="card">
+    {projects.map((p, i) => (
+      <article class="card reveal" style={`--i: ${i % 2}`}>
         <h2>{p.name}</h2>
         <p class="blurb">{p.blurb}</p>
         {p.points.length > 0 && (

@@ -42,14 +42,14 @@ if (data) {
 const profile = `${person.github}`;
 ---
 <section class="section contrib" aria-labelledby="contrib-title">
-  <h2 id="contrib-title">GitHub activity</h2>
+  <h2 id="contrib-title" class="reveal">GitHub activity</h2>
   {data ? (
     <>
       <p class="blurb">
         {data.total.toLocaleString('en-US')} contributions in the last year ·
         <a href={profile}> @{person.github.split('/').pop()} on GitHub</a>
       </p>
-      <div class="card contrib-card">
+      <div class="card contrib-card reveal">
         <div class="contrib-scroll">
           <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img"
             aria-label={`Contribution calendar: ${data.total} contributions in the last year`}>
