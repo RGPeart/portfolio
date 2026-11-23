@@ -5,11 +5,11 @@ import { experience } from '../data/site';
 <Base title="Experience" description="Work history of Ryan Peart: Data Engineer Consultant at Accenture, and Database Analyst at Minerva Knowledge Management.">
   <div class="page-head">
     <p class="eyebrow">Experience</p>
-    <h1>Where I've worked</h1>
+    <h1>Where I’ve worked</h1>
   </div>
   <ol class="timeline">
     {experience.map((e) => (
-      <li>
+      <li class="reveal">
         <h2>{e.role}</h2>
         <p class="meta">{e.org} · {e.dates}</p>
         {e.earlierRole && <p><span class="prev">Previously: {e.earlierRole}</span></p>}

@@ -5,12 +5,12 @@ import { projects } from '../data/site';
 <Base title="Projects" description="Personal data engineering projects by Ryan Peart: a Spotify data pipeline with recommendations, and a Magic Formula stock screener.">
   <div class="page-head">
     <p class="eyebrow">Projects</p>
-    <h1>Things I've built</h1>
-    <p>Personal projects where I get to pick the tools. More are on the way.</p>
+    <h1>Things I’ve built</h1>
+    <p>Personal projects where I get to pick the tools.</p>
   </div>
   <div class="cards">
-    {projects.map((p) => (
-      <article class="card">
+    {projects.map((p, i) => (
+      <article class="card reveal" style={`--i: ${i % 2}`}>
         <h2>{p.name}</h2>
         <p class="blurb">{p.blurb}</p>
         {p.points.length > 0 && (

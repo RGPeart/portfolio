@@ -3,14 +3,20 @@ import Base from '../layouts/Base.astro';
 import { person, intro, highlights, projects } from '../data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Split a trailing emoji off the greeting so it can wave once; the text itself is unchanged.
+const [, greetingText, greetingEmoji] = intro.greeting.match(/^(.*?)(\p{Extended_Pictographic}\u{FE0F}?)?$/u) ?? [, intro.greeting];
 ---
 <Base>
   <section class="hero">
     <div class="hero-text">
       <p class="eyebrow">{person.title} · {person.location}</p>
-      <h1>{intro.greeting}</h1>
-      <p class="name"><span class="grad">{person.name}</span></p>
-      {intro.paragraphs.map((t) => <p class="summary">{t}</p>)}
+      <h1>{greetingText}{greetingEmoji && <span class="wave">{greetingEmoji}</span>}</h1>
+      <p class="name">{person.name}</p>
+      {intro.paragraphs.map((t) => {
+        // Link the word LinkedIn in the copy to the profile; the text itself is unchanged.
+        const i = t.indexOf('LinkedIn');
+        return <p class="summary">{i < 0 ? t : <>{t.slice(0, i)}<a href={person.linkedin}>LinkedIn</a>{t.slice(i + 'LinkedIn'.length)}</>}</p>;
+      })}
       <div class="actions">
         <a class="btn primary" href={`${base}/projects/`}>See my projects</a>
         {person.resume && <a class="btn" href={`${base}/${person.resume}`}>Resume (PDF)</a>}
@@ -28,16 +34,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 
   <ul class="stats" aria-label="Highlights">
-    {highlights.map((h) => (
-      <li><strong>{h.value}</strong><span>{h.label}</span></li>
+    {highlights.map((h, i) => (
+      <li class="reveal" style={`--i: ${i}`}><strong>{h.value}</strong><span>{h.label}</span></li>
     ))}
   </ul>
 
   <section class="section" aria-labelledby="featured">
-    <h2 id="featured">Featured projects</h2>
+    <h2 id="featured" class="reveal">Featured projects</h2>
     <div class="cards">
-      {projects.map((p) => (
-        <article class="card">
+      {projects.map((p, i) => (
+        <article class="card reveal" style={`--i: ${i}`}>
           <h3>{p.name}</h3>
           <p class="blurb">{p.blurb}</p>
           <ul class="stack" aria-label="Technologies">
@@ -46,6 +52,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </article>
       ))}
     </div>
-    <p class="more"><a href={`${base}/projects/`}>All project details →</a></p>
+    <p class="more"><a href={`${base}/projects/`}>All project details <span class="arrow">→</span></a></p>
   </section>
 </Base>

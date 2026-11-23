@@ -34,7 +34,7 @@ export const description =
 export const highlights = [
   { value: '7', label: 'years in data engineering' },
   { value: '9', label: 'Accenture clients delivered' },
-  { value: '1,000+', label: 'member Data & AI 101 community, directed' },
+  { value: '1,000+', label: 'members in the Data & AI 101 community I directed' },
   { value: '4', label: 'cloud and data certifications' },
 ];
 
@@ -85,8 +85,12 @@ export const projects = [
     url: 'https://github.com/RGPeart/magic-formula-screener' as string | null,
     blurb:
       'Python tool that recommends undervalued stocks using the Magic Formula from Joel Greenblatt’s "The Little Book That Beats The Market".',
-    points: [],
-    stack: ['Python'],
+    points: [
+      'Ranks companies from the SEC’s public ticker list and saves the top 100 as a dated monthly snapshot.',
+      'A GitHub Actions workflow is scheduled to run the full screen on the 1st of each month.',
+      'Unit tests run with pytest in CI on every pull request.',
+    ],
+    stack: ['Python', 'pytest', 'GitHub Actions'],
   },
   {
     name: 'Wearable Analyzer',
