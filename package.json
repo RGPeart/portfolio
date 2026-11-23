@@ -19,5 +19,8 @@
     "@iconify-json/logos": "1.2.19",
     "astro": "7.4.7"
   },
-  "private": "true"
+  "private": "true",
+  "devDependencies": {
+    "playwright": "^1.65.1"
+  }
 }
