@@ -34,7 +34,7 @@ export const description =
 export const highlights = [
   { value: '7', label: 'years in data engineering' },
   { value: '9', label: 'Accenture clients delivered' },
-  { value: '1,000+', label: 'member Data & AI 101 community, directed' },
+  { value: '1,000+', label: 'members in the Data & AI 101 community I directed' },
   { value: '4', label: 'cloud and data certifications' },
 ];
 

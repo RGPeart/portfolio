@@ -12,7 +12,11 @@ const [, greetingText, greetingEmoji] = intro.greeting.match(/^(.*?)(\p{Extended
       <p class="eyebrow">{person.title} · {person.location}</p>
       <h1>{greetingText}{greetingEmoji && <span class="wave">{greetingEmoji}</span>}</h1>
       <p class="name">{person.name}</p>
-      {intro.paragraphs.map((t) => <p class="summary">{t}</p>)}
+      {intro.paragraphs.map((t) => {
+        // Link the word LinkedIn in the copy to the profile; the text itself is unchanged.
+        const i = t.indexOf('LinkedIn');
+        return <p class="summary">{i < 0 ? t : <>{t.slice(0, i)}<a href={person.linkedin}>LinkedIn</a>{t.slice(i + 'LinkedIn'.length)}</>}</p>;
+      })}
       <div class="actions">
         <a class="btn primary" href={`${base}/projects/`}>See my projects</a>
         {person.resume && <a class="btn" href={`${base}/${person.resume}`}>Resume (PDF)</a>}
